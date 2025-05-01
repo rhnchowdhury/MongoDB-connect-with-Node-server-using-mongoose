@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const app = express();
 const port = 4000;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   res.send("Server is created");
 });
@@ -18,9 +21,11 @@ app.get("/", (req, res) => {
 
 //!  product schema created
 const productSchema = new mongoose.Schema({
+  // schema with normal way
   title: String,
   price: Number,
   place: String,
+
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -40,6 +45,20 @@ const connectDB = async () => {
     console.error(error);
   }
 };
+
+app.post("/product", async (req, res) => {
+  try {
+    const newProduct = new product({
+      title: req.body.title,
+      price: req.body.price,
+      place: req.body.place,
+    });
+    const allProduct = await newProduct.save();
+    res.send(allProduct);
+  } catch (error) {
+    res.send(error.message);
+  }
+});
 
 app.listen(port, async () => {
   console.log(`Server is running at http://localhost:${port}`);
