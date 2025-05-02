@@ -59,8 +59,8 @@ const connectDB = async () => {
   }
 };
 
-// product created
-app.post("/product", async (req, res) => {
+// products created
+app.post("/products", async (req, res) => {
   try {
     const newProduct = new product({
       title: req.body.title,
@@ -69,6 +69,21 @@ app.post("/product", async (req, res) => {
     });
     const allProduct = await newProduct.save();
     res.send(allProduct);
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+// products get
+app.get("/products", async (req, res) => {
+  try {
+    const products = await product.find();
+    // const products = await product.find().limit(3);
+    if (products) {
+      res.send(products);
+    } else {
+      res.send("No Products in the list");
+    }
   } catch (error) {
     res.send(error.message);
   }
