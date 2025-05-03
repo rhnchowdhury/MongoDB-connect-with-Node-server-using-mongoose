@@ -46,7 +46,7 @@ const productSchema = new mongoose.Schema({
 });
 
 //!  product model created
-const product = mongoose.model("Products", productSchema);
+const Product = mongoose.model("Products", productSchema);
 
 //! database connected
 const connectDB = async () => {
@@ -62,7 +62,7 @@ const connectDB = async () => {
 // products created
 app.post("/products", async (req, res) => {
   try {
-    const newProduct = new product({
+    const newProduct = new Product({
       title: req.body.title,
       price: req.body.price,
       place: req.body.place,
@@ -77,12 +77,36 @@ app.post("/products", async (req, res) => {
 // products get
 app.get("/products", async (req, res) => {
   try {
-    const products = await product.find();
-    // const products = await product.find().limit(3);
+    const products = await Product.find();
+    // const products = await Product.find().limit(3);
     if (products) {
       res.send(products);
     } else {
       res.send("No Products in the list");
+    }
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+// product get by id
+app.get("/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // const products = await Product.find({ _id: id });
+
+    const products = await Product.findOne({ _id: id });
+
+    // const products = await Product
+    //   .findOne({ _id: id })
+    //   .select({ title: 1, price: 1, _id: 0 });
+
+    // const products = await Product.findOne({ _id: id }, { title: 1, _id: 0 });
+
+    if (products) {
+      res.send(products);
+    } else {
+      res.send("Product not in the list");
     }
   } catch (error) {
     res.send(error.message);
