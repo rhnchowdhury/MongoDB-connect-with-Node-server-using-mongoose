@@ -79,6 +79,23 @@ app.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
     // const products = await Product.find().limit(3);
+
+    //! some query
+    // const products = await Product.find().countDocuments();
+
+    // comparison query
+    // const products = await Product.find({ price: { $lt: 50000 } });
+    // const products = await Product.find({ price: { $in: [50000, 300, 400] } });
+
+    // parameter query
+    // const price = req.query.price;
+    // const products = await Product.find({ price: { $gt: price } });
+
+    // logical query
+    // const products = await Product.find({
+    //   $and: [{ price: { $lt: 50000 } }, { place: { $eq: "dhaka" } }],
+    // });
+
     if (products) {
       res.send(products);
     } else {
