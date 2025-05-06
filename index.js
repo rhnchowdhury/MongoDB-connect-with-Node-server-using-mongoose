@@ -79,6 +79,7 @@ app.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
     // const products = await Product.find().limit(3);
+    // const products = await Product.find().sort({ price: 1 });
 
     //! some query
     // const products = await Product.find().countDocuments();
@@ -124,6 +125,45 @@ app.get("/products/:id", async (req, res) => {
       res.send(products);
     } else {
       res.send("Product not in the list");
+    }
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+// products delete by id
+app.delete("/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deleteProduct = await Product.deleteOne({ _id: id });
+    if (deleteProduct) {
+      res.send({
+        message: "Product is deleted",
+        data: deleteProduct,
+      });
+    } else {
+      res.send({ message: "Product is not in the list" });
+    }
+  } catch (error) {
+    res.send(error.message);
+  }
+});
+
+// products updated by id
+app.put("/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updateProduct = await Product.updateOne(
+      { _id: id },
+      { $set: { price: 120000 } }
+    );
+    if (updateProduct) {
+      res.send({
+        message: "Product is updated",
+        data: updateProduct,
+      });
+    } else {
+      res.send({ message: "Product is not updated" });
     }
   } catch (error) {
     res.send(error.message);
